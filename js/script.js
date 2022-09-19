@@ -7,7 +7,7 @@ const apiUnsplash = "https://source.unsplash.com/1600x900/?";
 const inputSearch = document.getElementById("input-search");
 const btnSearch = document.getElementById("input-button");
 
-const body = document.querySelector("body")
+const body = document.querySelector("body");
 const container = document.querySelector(".container");
 const cityElement = document.getElementById("city");
 const countryFlagElement = document.getElementById("country-flag");
@@ -17,17 +17,27 @@ const weatherIconElement = document.getElementById("weather-icon");
 const humidityElement = document.querySelector("#humidity span");
 const windElement = document.querySelector("#wind-speed span");
 
-const informations = document.querySelector(".hide")
-const errorMessageContainer = document.querySelector("#error-message")
+const informations = document.querySelector(".hide");
+const errorMessageContainer = document.querySelector("#error-message");
+
 // Funções
-const changeBackground = (city)=>{
-    body.style.backgroundImage = `url("${apiUnsplash + city}")`
-}
+
+const changeBackground = (city) => {
+  body.style.backgroundImage = `url("${apiUnsplash + city}")`;
+};
+
+const toggleLoader = () => {
+  loader.classList.toggle("hide");
+};
 
 const getWeatherData = async (city) => {
+  toggleLoader();
+
   const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}&lang=pt_br`;
-  const res = await fetch(weatherURL)
-  const dados = await res.json();   
+  const res = await fetch(weatherURL);
+  const dados = await res.json();
+
+  toggleLoader();
   return dados;
 };
 
@@ -50,20 +60,20 @@ const setWetherInformations = (dados) => {
   humidityElement.innerHTML = `${humidity}`;
   windElement.innerHTML = `${wind}`;
 
-  informations.classList.remove("hide")
+  informations.classList.remove("hide");
 };
 
 const showWeatherData = async (city) => {
   const dados = await getWeatherData(city);
-    if(dados.cod === "404"){
-        informations.classList.add("hide")
-        errorMessageContainer.classList.remove("hide")
-    } else{
-        errorMessageContainer.classList.add("hide")
-    }
+  if (dados.cod === "404") {
+    informations.classList.add("hide");
+    errorMessageContainer.classList.remove("hide");
+  } else {
+    errorMessageContainer.classList.add("hide");
+  }
 
   setWetherInformations(dados);
-  changeBackground(city)
+  changeBackground(city);
 };
 
 // Eventos
